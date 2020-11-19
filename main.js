@@ -1,70 +1,70 @@
-// Задача 1
+const $buttons = document.querySelectorAll('.button');
 
-const firstStr = prompt('Введите первую строку');
-const secondStr = prompt('Введите вторую строку');
-const letter = prompt('Какую букву найти?');
-
-
-const getLetterQuantity = (str, letter) => {
-	let res = 0;
-
-	for (let i = 0; i < str.length; i += 1) {
-		str.charAt(i) === letter ? res += 1 : res;
-	}
-
-	return res;
+const getRandomNum = (num) => {
+	return Math.ceil(Math.random() * num);
 };
 
-const getRow = (firstStr, secondStr, letter) => {
-	const firstRow = getLetterQuantity(firstStr, letter);
-	const secondRow = getLetterQuantity(secondStr, letter);
+const character = {
+	name: 'Pikachu',
+	defaultHP: 100,
+	damageHP: 100,
+	elHp: document.getElementById('health-character'),
+	elProgressbar: document.getElementById('progressbar-character'),
+};
 
-	return firstRow > secondRow ? firstStr : secondStr;
+const enemy = {
+	name: 'Charmander',
+	defaultHP: 100,
+	damageHP: 100,
+	elHp: document.getElementById('health-enemy'),
+	elProgressbar: document.getElementById('progressbar-enemy'),
+};
+
+const damageLevel = {
+	'btn-kick-1': () => getRandomNum(20),
+	'btn-kick-2': () => getRandomNum(20) * 2,
 }
 
-const result = getRow(firstStr, secondStr, letter);
+const renderHpLife = (person) => {
+	person.elHp.innerHTML = [person.damageHP, person.defaultHP].join(' / ');
+};
 
-alert(`В этой строке ${result} больше букв ${letter}`);
+const renderProgressbar = (person) => {
+	person.elProgressbar.style.width = person.damageHP + '%';
+};
 
-// Задача 2
-const tel = prompt('Введите номер телефона');
+const renderHP = (person) => {
+	renderHpLife(person);
+	renderProgressbar(person);
+}
 
-const firstItem = ['+', '7', '8', '9'];
+const buttonsDisabled = () => {
+	$buttons.forEach(($button) => $button.disabled = true);
+}
 
-const convertTel = (tel) => {
-	let telephone = '';
-	let res = '';
-	if (tel.length < 10 || tel.length > 12 || !firstItem.includes(tel.charAt(0))) {
-		res = 'Не верный формат телефона';
-		return res;
-	}
-
-	if (tel.length === 10) {
-		telephone += '+7' + tel;
-	} else if (tel.length === 11) {
-		telephone = '+7' + tel.slice(1);
+const changeHP = (count, person, $button) => {
+	if (person.damageHP < count) {
+		person.damageHP = 0;
+		alert(person.name + ' is died!!');
+		buttonsDisabled();
 	} else {
-		telephone = tel;
+		person.damageHP -= count;
 	}
+	renderHpLife(person);
+	renderProgressbar(person);
+};
 
-	for (let i = 0; i < telephone.length; i += 1) {
-		const item = telephone.charAt(i);
+const handleClick = (e) => {
+	const $buttonId = e.target.id;
+	changeHP(damageLevel[$buttonId](), character);
+	changeHP(damageLevel[$buttonId](), enemy);
+};
 
-		if (i === 2) {
-			res += ' ' + '(' + item;
-		} else if (i === 4) {
-			res += item + ')';
-		} else if (i === 5) {
-			res += ' ' + item;
-		} else if (i === 7 || i === 9) {
-			res += item + '-';
-		} else {
-			res += item;
-		}
-	}
-	return res;
-}
+$buttons.forEach(($button) => $button.addEventListener('click', handleClick));
 
-const result = convertTel(tel);
+const init = () => {
+	renderHP(character);
+	renderHP(enemy)
+};
 
-alert(result);
+init()
