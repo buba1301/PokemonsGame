@@ -6,25 +6,29 @@ function getRandomNum(num, dmgLevel) {
 	return Math.ceil(Math.random() * num) * dmgLevel;
 };
 
-function getLog(firstPerson, secondPErson) {
+function getLog(firstPerson, secondPerson, damageHP, health) {
 	const logs = [
-		`${firstPerson} вспомнил что-то важное, но неожиданно ${secondPErson}, не помня себя от испуга, ударил в предплечье врага.]`,
-		`${firstPerson} поперхнулся, и за это ${secondPErson} с испугу приложил прямой удар коленом в лоб врага.`,
-		`${firstPerson} забылся, но в это время наглый ${secondPErson}, приняв волевое решение, неслышно подойдя сзади, ударил.`,
-		`${firstPerson} пришел в себя, но неожиданно ${secondPErson} случайно нанес мощнейший удар.`,
-		`${firstPerson} поперхнулся, но в это время ${secondPErson} нехотя раздробил кулаком \<вырезанно цензурой\> противника.`,
-		`${firstPerson} удивился, а ${secondPErson} пошатнувшись влепил подлый удар.`,
-		`${firstPerson} высморкался, но неожиданно ${secondPErson} провел дробящий удар.`,
-		`${firstPerson} пошатнулся, и внезапно наглый ${secondPErson} беспричинно ударил в ногу противника`,
-		`${firstPerson} расстроился, как вдруг, неожиданно ${secondPErson} случайно влепил стопой в живот соперника.`,
-		`${firstPerson} пытался что-то сказать, но вдруг, неожиданно ${secondPErson} со скуки, разбил бровь сопернику.`
+		`${firstPerson} вспомнил что-то важное, но неожиданно ${secondPerson}, не помня себя от испуга, ударил в предплечье врага. -${damageHP}, [${health}]`,
+		`${firstPerson} поперхнулся, и за это ${secondPerson} с испугу приложил прямой удар коленом в лоб врага. -${damageHP}, [${health}]`,
+		`${firstPerson} забылся, но в это время наглый ${secondPerson}, приняв волевое решение, неслышно подойдя сзади, ударил. - ${damageHP}, [${health}]`,
+		`${firstPerson} пришел в себя, но неожиданно ${secondPerson} случайно нанес мощнейший удар. - ${damageHP}, [${health}]`,
+		`${firstPerson} поперхнулся, но в это время ${secondPerson} нехотя раздробил кулаком \<вырезанно цензурой\> противника. -${damageHP}, [${health}]`,
+		`${firstPerson} удивился, а ${secondPerson} пошатнувшись влепил подлый удар. -${damageHP}, [${health}]`,
+		`${firstPerson} высморкался, но неожиданно ${secondPerson} провел дробящий удар. -${damageHP}, [${health}]`,
+		`${firstPerson} пошатнулся, и внезапно наглый ${secondPerson} беспричинно ударил в ногу противника -${damageHP}, [${health}]`,
+		`${firstPerson} расстроился, как вдруг, неожиданно ${secondPerson} случайно влепил стопой в живот соперника. -${damageHP}, [${health}]`,
+		`${firstPerson} пытался что-то сказать, но вдруг, неожиданно ${secondPerson} со скуки, разбил бровь сопернику. -${damageHP}, [${health}]`
 	];
 
 	return logs[getRandomNum(logs.length, 1) - 1];
 }
 
+function getHealth(dmgHP, HP) {
+	return [dmgHP, HP].join(' / ');
+};
+
 function renderHpLife() {
-	this.elHp.innerHTML = [this.damageHP, this.defaultHP].join(' / ');
+	this.elHp.innerHTML = getHealth(this.damageHP, this.defaultHP);
 };
 
 function renderProgressbar() {
@@ -44,7 +48,8 @@ function buttonsDisabled() {
 function changeHP(count) {
 	this.damageHP -= count;
 
-	const log = this === enemy ? getLog(this.name, character.name) : getLog(this.name, enemy.name);
+	const health = getHealth(this.damageHP, this.defaultHP);
+	const log = this === enemy ? getLog(this.name, character.name, count, health) : getLog(this.name, enemy.name, count, health);
 
 	if (this.damageHP <= 0) {
 		this.damageHP = 0;
