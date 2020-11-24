@@ -64,12 +64,35 @@ function changeHP(count) {
 	$logsDiv.insertBefore($p, $lastElem);
 };
 
+function renderClickCounter(button) {
+	const $button = button.elButton;
+	if (button.leftClick === 0) {
+		$button.disabled = true;
+		$button.innerHTML = 'Kick are over';
+		$button.after(p);
+	}
+}
+
+function getClickCount(button) {
+	button.clickCount += 1;
+	button.leftClick -= 1;
+	console.log(button.clickCount, button.leftClick);
+};
+
+
 const handleClick = ({ target: { id } }) => {
+	const button = buttons[id];
+	console.log(buttons, id);
+
 	const dmgLevel = Number(id.slice(-1));
 
-	const count = damageLevel[id](20, dmgLevel);
+	getClickCount(button);
+
+	const count = button.kick(20, dmgLevel);
+
 	character.changeHP(count);
 	enemy.changeHP(count);
+	renderClickCounter(button)
 };
 
 $buttons.forEach(($button) => $button.addEventListener('click', handleClick));
@@ -103,9 +126,21 @@ const enemy = {
 };
 
 const damageLevel = {
-	'btn-kick-1': getRandomNum,
-	'btn-kick-2': getRandomNum,
+	kick: getRandomNum,
+	clickCount: 0,
+	leftClick: 3,
 };
+
+const createButton = (id) => {
+	const newButton = Object.create(damageLevel);
+	newButton.elButton = document.querySelector(`#${id}`);
+	return newButton;
+};
+
+const buttons = {
+	"btn-kick-1": createButton("btn-kick-1"),
+	"btn-kick-2": createButton("btn-kick-2"),
+}
 
 const init = () => {
 	character.renderHP();
