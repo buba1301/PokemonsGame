@@ -35,14 +35,20 @@ body {
 }
 
 .control {
-    width: 320px;
+    width: 250px;
     height: 260px;
     position: relative;
     margin: 20px;
     display: flex;
+    flex-direction: column;
     flex: wrap;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
+}
+
+.count {
+    width: 145px;
+    height: 49px;
 }
 
 .playground {

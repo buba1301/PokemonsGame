@@ -64,12 +64,13 @@ function changeHP(count) {
 	$logsDiv.insertBefore($p, $lastElem);
 };
 
-function renderClickCounter(button) {
+function renderClickCounter(button, span) {
 	const $button = button.elButton;
 	if (button.leftClick === 0) {
 		$button.disabled = true;
-		$button.innerHTML = 'Kick are over';
-		$button.after(p);
+		span.innerHTML = 'Kick are over';
+	} else {
+		span.innerHTML = `${button.leftClick} / 6`;
 	}
 }
 
@@ -81,10 +82,10 @@ function getClickCount(button) {
 
 
 const handleClick = ({ target: { id } }) => {
-	const button = buttons[id];
-	console.log(buttons, id);
-
 	const dmgLevel = Number(id.slice(-1));
+	const button = buttons[id];
+	const span = document.getElementById(dmgLevel);
+	console.log(span);
 
 	getClickCount(button);
 
@@ -92,7 +93,7 @@ const handleClick = ({ target: { id } }) => {
 
 	character.changeHP(count);
 	enemy.changeHP(count);
-	renderClickCounter(button)
+	renderClickCounter(button, span);
 };
 
 $buttons.forEach(($button) => $button.addEventListener('click', handleClick));
@@ -128,7 +129,7 @@ const enemy = {
 const damageLevel = {
 	kick: getRandomNum,
 	clickCount: 0,
-	leftClick: 3,
+	leftClick: 6,
 };
 
 const createButton = (id) => {
