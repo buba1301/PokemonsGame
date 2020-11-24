@@ -1,70 +1,115 @@
-const $buttons = document.querySelectorAll('.button');
 
-const getRandomNum = (num) => {
-	return Math.ceil(Math.random() * num);
+const $buttons = document.querySelectorAll('.button');
+const $logsDiv = document.querySelector('#logs');
+
+function getRandomNum(num, dmgLevel) {
+	return Math.ceil(Math.random() * num) * dmgLevel;
 };
+
+function getLog(firstPerson, secondPerson, damageHP, health) {
+	const logs = [
+		`${firstPerson} вспомнил что-то важное, но неожиданно ${secondPerson}, не помня себя от испуга, ударил в предплечье врага. -${damageHP}, [${health}]`,
+		`${firstPerson} поперхнулся, и за это ${secondPerson} с испугу приложил прямой удар коленом в лоб врага. -${damageHP}, [${health}]`,
+		`${firstPerson} забылся, но в это время наглый ${secondPerson}, приняв волевое решение, неслышно подойдя сзади, ударил. - ${damageHP}, [${health}]`,
+		`${firstPerson} пришел в себя, но неожиданно ${secondPerson} случайно нанес мощнейший удар. - ${damageHP}, [${health}]`,
+		`${firstPerson} поперхнулся, но в это время ${secondPerson} нехотя раздробил кулаком \<вырезанно цензурой\> противника. -${damageHP}, [${health}]`,
+		`${firstPerson} удивился, а ${secondPerson} пошатнувшись влепил подлый удар. -${damageHP}, [${health}]`,
+		`${firstPerson} высморкался, но неожиданно ${secondPerson} провел дробящий удар. -${damageHP}, [${health}]`,
+		`${firstPerson} пошатнулся, и внезапно наглый ${secondPerson} беспричинно ударил в ногу противника -${damageHP}, [${health}]`,
+		`${firstPerson} расстроился, как вдруг, неожиданно ${secondPerson} случайно влепил стопой в живот соперника. -${damageHP}, [${health}]`,
+		`${firstPerson} пытался что-то сказать, но вдруг, неожиданно ${secondPerson} со скуки, разбил бровь сопернику. -${damageHP}, [${health}]`
+	];
+
+	return logs[getRandomNum(logs.length, 1) - 1];
+}
+
+function getHealth(dmgHP, HP) {
+	return [dmgHP, HP].join(' / ');
+};
+
+function renderHpLife() {
+	this.elHp.innerHTML = getHealth(this.damageHP, this.defaultHP);
+};
+
+function renderProgressbar() {
+	const persent = this.damageHP * 100 / this.defaultHP;
+	this.elProgressbar.style.width = persent + '%';
+};
+
+function renderHP() {
+	this.renderHpLife();
+	this.renderProgressbar();
+};
+
+function buttonsDisabled() {
+	$buttons.forEach(($button) => $button.disabled = true);
+};
+
+function changeHP(count) {
+	this.damageHP -= count;
+
+	const health = getHealth(this.damageHP, this.defaultHP);
+	const log = this === enemy ? getLog(this.name, character.name, count, health) : getLog(this.name, enemy.name, count, health);
+
+	if (this.damageHP <= 0) {
+		this.damageHP = 0;
+		alert(this.name + ' is died!!');
+		buttonsDisabled();
+	}
+	this.renderHP();
+	$p = document.createElement('p');
+	$p.innerHTML = log;
+
+	const [$lastElem] = $logsDiv.children;
+	$logsDiv.insertBefore($p, $lastElem);
+};
+
+const handleClick = ({ target: { id } }) => {
+	const dmgLevel = Number(id.slice(-1));
+
+	const count = damageLevel[id](20, dmgLevel);
+	character.changeHP(count);
+	enemy.changeHP(count);
+};
+
+$buttons.forEach(($button) => $button.addEventListener('click', handleClick));
 
 const character = {
 	name: 'Pikachu',
 	defaultHP: 100,
 	damageHP: 100,
+
 	elHp: document.getElementById('health-character'),
 	elProgressbar: document.getElementById('progressbar-character'),
+
+	renderHpLife: renderHpLife,
+	renderProgressbar: renderProgressbar,
+	renderHP: renderHP,
+	changeHP: changeHP,
 };
 
 const enemy = {
 	name: 'Charmander',
 	defaultHP: 100,
 	damageHP: 100,
+
 	elHp: document.getElementById('health-enemy'),
 	elProgressbar: document.getElementById('progressbar-enemy'),
+
+	renderHpLife: renderHpLife,
+	renderProgressbar: renderProgressbar,
+	renderHP: renderHP,
+	changeHP: changeHP,
 };
 
 const damageLevel = {
-	'btn-kick-1': () => getRandomNum(20),
-	'btn-kick-2': () => getRandomNum(20) * 2,
-}
-
-const renderHpLife = (person) => {
-	person.elHp.innerHTML = [person.damageHP, person.defaultHP].join(' / ');
+	'btn-kick-1': getRandomNum,
+	'btn-kick-2': getRandomNum,
 };
-
-const renderProgressbar = (person) => {
-	person.elProgressbar.style.width = person.damageHP + '%';
-};
-
-const renderHP = (person) => {
-	renderHpLife(person);
-	renderProgressbar(person);
-}
-
-const buttonsDisabled = () => {
-	$buttons.forEach(($button) => $button.disabled = true);
-}
-
-const changeHP = (count, person, $button) => {
-	if (person.damageHP < count) {
-		person.damageHP = 0;
-		alert(person.name + ' is died!!');
-		buttonsDisabled();
-	} else {
-		person.damageHP -= count;
-	}
-	renderHpLife(person);
-	renderProgressbar(person);
-};
-
-const handleClick = (e) => {
-	const $buttonId = e.target.id;
-	changeHP(damageLevel[$buttonId](), character);
-	changeHP(damageLevel[$buttonId](), enemy);
-};
-
-$buttons.forEach(($button) => $button.addEventListener('click', handleClick));
 
 const init = () => {
-	renderHP(character);
-	renderHP(enemy)
+	character.renderHP();
+	enemy.renderHP();
 };
 
-init()
+init();
