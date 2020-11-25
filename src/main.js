@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-return-assign */
 import getLog from './log.js';
 import Pokemon from './classes/pokemon.js';
 import Buttons from './classes/buttons.js';
