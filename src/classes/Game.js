@@ -15,6 +15,35 @@ class Game {
     this.gameStatus = gameStatus;
   }
 
+  startGame = () => {
+    const { pokemons } = this;
+    this.isPlayer1 = true;
+    this.buttonsDisabled = false;
+
+    const [beginRandomIndex, endRandomIndex] = this.generateRandomIds(pokemons);
+
+    if (this.gameStatus === 'continue') {
+      const player1 = pokemons[this.player1.id];
+      this.player1 = new Pokemon({ ...player1, selectors: 'character' });
+      this.isPlayer1 = true;
+    } else {
+      this.player1 = this.generatePlayer(beginRandomIndex, endRandomIndex, 'character');
+    }
+
+    this.player2 = this.generatePlayer(beginRandomIndex, endRandomIndex, 'enemy');
+
+    this.buttons1 = this.generateButtons(this.player1);
+    this.buttons2 = this.generateButtons(this.player2);
+
+    this.player1.renderButtons(!this.isPlayer1);
+    this.player1.renderHP();
+
+    this.player2.renderButtons(this.isPlayer1);
+    this.player2.renderHP();
+
+    this.generateEventListners();
+  };
+
   generateRandomIds = (pokemons) => {
     const beginRandomId = 0;
     const endRandomId = Object.keys(pokemons).length - 1;
@@ -42,44 +71,14 @@ class Game {
     $buttons.forEach(($button) => $button.addEventListener('click', handleClick));
   };
 
-  startGame = () => {
-    const { pokemons } = this;
-    this.isPlayer1 = true;
-    this.buttonsDisabled = false;
-    const [beginRandomId, endRandomId] = this.generateRandomIds(pokemons);
-    console.log('Start', this.isPlayer1);
-    console.log('Start', this.buttonsDisabled);
-    if (this.gameStatus === 'continue') {
-      const player1 = pokemons[this.player1.id];
-      this.player1 = new Pokemon({ ...player1, selectors: 'character' });
-      this.isPlayer1 = true;
-    } else {
-      this.player1 = this.generatePlayer(beginRandomId, endRandomId, 'character');
-    }
-
-    this.player2 = this.generatePlayer(beginRandomId, endRandomId, 'enemy');
-
-    this.buttons1 = this.generateButtons(this.player1);
-    this.buttons2 = this.generateButtons(this.player2);
-
-    this.player1.renderButtons(!this.isPlayer1);
-    this.player1.renderHP();
-
-    this.player2.renderButtons(this.isPlayer1);
-    this.player2.renderHP();
-
-    this.generateEventListners();
-  };
-
   buttonActions = (id, $buttons) => {
     const { buttons1, buttons2, isPlayer1, player1, player2 } = this;
-    console.log('Event', isPlayer1);
-    console.log('Event', this.buttonsDisabled);
 
     const player = isPlayer1 ? player1 : player2;
     const oponent = isPlayer1 ? player2 : player1;
 
     const currentButton = [...buttons1, ...buttons2].find((button) => button.name === id);
+
     const count = currentButton.kickPoints();
 
     currentButton.renderClickCounter();
@@ -98,11 +97,17 @@ class Game {
 
   changePlayer = () => {
     this.isPlayer1 = !this.isPlayer1;
-    console.log('CHange', this.isPlayer1);
-    console.log('CHange', this.buttonsDisabled);
     this.buttonsDisabled = !this.buttonsDisabled;
     this.player1.disabledButtons(this.buttonsDisabled);
     this.player2.disabledButtons(!this.buttonsDisabled);
+  };
+
+  handleClickButtonReset = ($button, gameStatus) => {
+    $button.addEventListener('click', () => {
+      this.gameStatus = gameStatus;
+      this.startGame();
+      $button.remove();
+    });
   };
 
   resetGame = ($buttons) => {
@@ -112,20 +117,9 @@ class Game {
     const $buttonContinue = document.getElementById('continue');
 
     if ($buttonReset) {
-      $buttonReset.addEventListener('click', () => {
-        console.log('!!!');
-
-        this.gameStatus = 'run';
-        // this.isPlayer1 = true;
-        this.startGame();
-        $buttonReset.remove();
-      });
+      this.handleClickButtonReset($buttonReset, 'run');
     } else {
-      $buttonContinue.addEventListener('click', () => {
-        this.gameStatus = 'continue';
-        this.startGame();
-        $buttonContinue.remove();
-      });
+      this.handleClickButtonReset($buttonContinue, 'continue');
     }
     $logsDiv.remove();
     const $body = document.querySelector('.body');
