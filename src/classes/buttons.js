@@ -1,32 +1,26 @@
-import getRandomNum from '../utils.js';
+import { getRandomId } from '../utils.js';
 
-class Selectors {
-  constructor({ buttonId, playerId }) {
-    this.elButton = document.getElementById(`btn-kick-${buttonId}-player-${playerId}`);
-    this.spanEl = document.getElementById(`count-kick-${buttonId}-player-${playerId}`);
-  }
-}
-
-class Buttons extends Selectors {
-  constructor({ maxClick, leftClick, dmgLevel, selectors }) {
-    super(selectors);
-    this.maxClick = maxClick;
-    this.leftClick = leftClick;
-    this.dmgLevel = dmgLevel;
+class Buttons {
+  constructor({ name, maxDamage, minDamage, maxCount }) {
+    this.name = name;
+    this.maxDamage = maxDamage;
+    this.minDamage = minDamage;
+    this.maxCount = maxCount;
   }
 
-  kickPoints = () => getRandomNum(20, this.dmgLevel);
+  kickPoints = () => getRandomId(this.minDamage, this.maxCount);
 
   renderClickCounter = () => {
-    this.leftClick -= 1;
+    const elButton = document.getElementById(this.name);
+    const spanEl = document.querySelector(`span[name="count-${this.name}"]`);
 
-    const { elButton, spanEl, leftClick, maxClick } = this;
+    this.maxCount -= 1;
 
-    if (leftClick === 0) {
-      elButton.disabled = true;
-      spanEl.innerHTML = 'Kick are over';
+    if (this.maxCount === 0) {
+      spanEl.innerHTML = `(${this.maxCount})`;
+      elButton.remove(); // TODO делать дисейбл ?? перекрывается с общим дисейблом при перходе хода
     } else {
-      spanEl.innerHTML = `${leftClick} / ${maxClick}`;
+      spanEl.innerHTML = `(${this.maxCount})`;
     }
   };
 }

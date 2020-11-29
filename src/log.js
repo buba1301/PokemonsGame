@@ -1,4 +1,4 @@
-import getRandomNum from './utils.js';
+import { getRandomNum } from './utils.js';
 
 function getLog(firstPerson, secondPerson, damageHP) {
   const logs = [
