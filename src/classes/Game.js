@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 /* eslint-disable no-unused-expressions */
-import { getRandomId } from '../utils.js';
 import Pokemon from './pokemon.js';
 import Buttons from './buttons.js';
 import getLog from '../log.js';
@@ -8,13 +7,13 @@ import Routes from './Routes.js';
 import getPokemons from '../pokemons.js';
 
 class Game {
-  constructor({ pokemons, isPlayer1, player1, player2, buttonsDisabled, gameStatus }) {
-    this.pokemons = pokemons;
-    this.isPlayer1 = isPlayer1;
-    this.buttonsDisabled = buttonsDisabled;
-    this.player1 = player1;
-    this.player2 = player2;
-    this.gameStatus = gameStatus;
+  constructor() {
+    this.pokemons = {};
+    this.isPlayer1 = true;
+    this.buttonsDisabled = false;
+    this.player1 = {};
+    this.player2 = {};
+    this.gameStatus = 'run';
     this.routes = {};
   }
 
@@ -30,13 +29,10 @@ class Game {
     this.isPlayer1 = true;
     this.buttonsDisabled = false;
 
-    // const [beginRandomIndex, endRandomIndex] = this.generateRandomIds(pokemons);
-
     if (this.gameStatus === 'continue') {
       const player1 = pokemons[this.player1.id];
 
       this.player1 = new Pokemon({ ...player1, selectors: 'character' });
-      // this.isPlayer1 = true;
     } else {
       this.player1 = await this.generatePlayer('character');
     }
@@ -55,17 +51,7 @@ class Game {
     this.generateEventListners();
   };
 
-  generateRandomIds = (pokemons) => {
-    const beginRandomId = 0;
-    const endRandomId = Object.keys(pokemons).length - 1;
-    return [beginRandomId, endRandomId];
-  };
-
   generatePlayer = async (role) => {
-    /* const { pokemons } = this;
-
-    const pokemonId = getRandomId(beginRandomId, endRandomId);
-    const props = { ...pokemons[pokemonId], selectors: role }; */
     const randomPokemon = await this.routes.getData('getPokemons', { random: true });
 
     const props = { ...randomPokemon, selectors: role };
@@ -85,7 +71,7 @@ class Game {
     $buttons.forEach(($button) => $button.addEventListener('click', handleClick));
   };
 
-  buttonActions = (id, $buttons) => {
+  buttonActions = async (id, $buttons) => {
     const { buttons1, buttons2, isPlayer1, player1, player2 } = this;
 
     const player = isPlayer1 ? player1 : player2;
@@ -93,7 +79,14 @@ class Game {
 
     const currentButton = [...buttons1, ...buttons2].find((button) => button.name === id);
 
-    const count = currentButton.kickPoints();
+    const query = {
+      player1id: this.player1.id,
+      player2id: this.player2.id,
+      attackId: currentButton.id,
+    };
+
+    const { kick } = await this.routes.getData('getFight', query);
+    const count = isPlayer1 ? kick.player1 : kick.player2;
 
     currentButton.renderClickCounter();
 
@@ -146,3 +139,5 @@ class Game {
 }
 
 export default Game;
+
+// { pokemons, isPlayer1, player1, player2, buttonsDisabled, gameStatus }

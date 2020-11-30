@@ -195,7 +195,6 @@
 ]; */
 
 const getPokemons = (pokemons) => {
-  console.log('P', pokemons);
   return pokemons.reduce((acc, pokemon) => ({ ...acc, [pokemon.id]: { ...pokemon } }), {});
 };
 

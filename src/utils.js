@@ -1,7 +1,3 @@
-export function getRandomNum(num, dmgLevel) {
-  return Math.ceil(Math.random() * num) * dmgLevel;
-}
-
 export function getRandomId(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

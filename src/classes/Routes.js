@@ -16,15 +16,9 @@ class Routes {
   }
 
   getQueryParams = (query) => {
-    console.log('!!!!!', query);
-
     if (!query) {
       return '';
     }
-    console.log(
-      '????',
-      Object.entries(query).map(([key, value]) => `${key}=${value}`),
-    );
 
     return Object.entries(query)
       .map(([key, value]) => `${key}=${value}`)
@@ -44,9 +38,10 @@ class Routes {
   };
 
   getData = async (endPointConfig, query = null) => {
-    const url = this.getUrl(endPointConfig, query);
-    console.log('Route', url);
+    console.log('!!!!!!!!!!!', query);
 
+    const url = this.getUrl(endPointConfig, query);
+    console.log('!!!!!!!!!!!', url);
     const res = await fetch(url);
     const data = res.json();
 
