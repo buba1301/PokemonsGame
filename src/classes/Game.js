@@ -4,6 +4,8 @@ import { getRandomId } from '../utils.js';
 import Pokemon from './pokemon.js';
 import Buttons from './buttons.js';
 import getLog from '../log.js';
+import Routes from './Routes.js';
+import getPokemons from '../pokemons.js';
 
 class Game {
   constructor({ pokemons, isPlayer1, player1, player2, buttonsDisabled, gameStatus }) {
@@ -13,24 +15,33 @@ class Game {
     this.player1 = player1;
     this.player2 = player2;
     this.gameStatus = gameStatus;
+    this.routes = {};
   }
 
-  startGame = () => {
+  startGame = async () => {
     const { pokemons } = this;
+
+    this.routes = new Routes();
+
+    const data = await this.routes.getData('getPokemons');
+
+    this.pokemons = getPokemons(data);
+
     this.isPlayer1 = true;
     this.buttonsDisabled = false;
 
-    const [beginRandomIndex, endRandomIndex] = this.generateRandomIds(pokemons);
+    // const [beginRandomIndex, endRandomIndex] = this.generateRandomIds(pokemons);
 
     if (this.gameStatus === 'continue') {
       const player1 = pokemons[this.player1.id];
+
       this.player1 = new Pokemon({ ...player1, selectors: 'character' });
-      this.isPlayer1 = true;
+      // this.isPlayer1 = true;
     } else {
-      this.player1 = this.generatePlayer(beginRandomIndex, endRandomIndex, 'character');
+      this.player1 = await this.generatePlayer('character');
     }
 
-    this.player2 = this.generatePlayer(beginRandomIndex, endRandomIndex, 'enemy');
+    this.player2 = await this.generatePlayer('enemy');
 
     this.buttons1 = this.generateButtons(this.player1);
     this.buttons2 = this.generateButtons(this.player2);
@@ -50,11 +61,14 @@ class Game {
     return [beginRandomId, endRandomId];
   };
 
-  generatePlayer = (beginRandomId, endRandomId, role) => {
-    const { pokemons } = this;
+  generatePlayer = async (role) => {
+    /* const { pokemons } = this;
 
     const pokemonId = getRandomId(beginRandomId, endRandomId);
-    const props = { ...pokemons[pokemonId], selectors: role };
+    const props = { ...pokemons[pokemonId], selectors: role }; */
+    const randomPokemon = await this.routes.getData('getPokemons', { random: true });
+
+    const props = { ...randomPokemon, selectors: role };
 
     return new Pokemon({ ...props });
   };
