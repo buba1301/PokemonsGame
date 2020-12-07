@@ -139,5 +139,3 @@ class Game {
 }
 
 export default Game;
-
-// { pokemons, isPlayer1, player1, player2, buttonsDisabled, gameStatus }

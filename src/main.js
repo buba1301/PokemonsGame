@@ -4,5 +4,3 @@ export default () => {
   const game = new Game();
   game.startGame();
 };
-
-// getPokemons()
