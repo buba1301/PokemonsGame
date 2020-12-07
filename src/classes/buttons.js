@@ -10,7 +10,7 @@ class Buttons {
   }
 
   kickPoints = () => {
-    return getRandomId(this.minDamage, this.maxCount)
+    return getRandomId(this.minDamage, this.maxDamage)
   };
 
   renderClickCounter = () => {
