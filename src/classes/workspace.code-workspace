@@ -1,0 +1,10 @@
+{
+  "folders": [
+	{
+		"path": "../../../ReactMarathon-"
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "PokemonsGame"
+  }
+}
