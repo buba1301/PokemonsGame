@@ -20,7 +20,11 @@
         <div class="pokemon character">
           <span class="lvl">Lv. 1</span>
 
-          <img src="http://sify4321.000webhostapp.com/pikachu.png" class="sprite" />
+          <img
+            src="http://sify4321.000webhostapp.com/pikachu.png"
+            class="sprite"
+            id="image-character"
+          />
 
           <div class="details">
             <h2 class="name" id="name-character">Pikachu</h2>
@@ -33,38 +37,18 @@
           </div>
         </div>
 
-        <div class="control">
-          <button class="button" id="btn-kick-1-player-1">Thunder Jolt</button>
-          <div class="count">
-            <span>You have kick</span>
-            <span id="count-kick-1-player-1">6 / 6</span>
-          </div>
+        <div class="control" id="control-character"></div>
 
-          <button class="button" id="btn-kick-2-player-1">Double damege</button>
-          <div class="count">
-            <span>You have doble kick</span>
-            <span id="count-kick-2-player-1">3 / 3</span>
-          </div>
-        </div>
-
-        <div class="control">
-          <button class="button" id="btn-kick-1-player-2">Thunder Jolt</button>
-          <div class="count">
-            <span>You have kick</span>
-            <span id="count-kick-1-player-2">6 / 6</span>
-          </div>
-
-          <button class="button" id="btn-kick-2-player-2">Double damege</button>
-          <div class="count">
-            <span>You have doble kick</span>
-            <span id="count-kick-2-player-2">3 / 3</span>
-          </div>
-        </div>
+        <div class="control" id="control-enemy"></div>
 
         <div class="pokemon enemy">
           <span class="lvl">Lv. 1</span>
 
-          <img src="http://sify4321.000webhostapp.com/charmander.png" class="sprite" />
+          <img
+            src="http://sify4321.000webhostapp.com/charmander.png"
+            class="sprite"
+            id="image-enemy"
+          />
 
           <div class="details">
             <h2 class="name" id="name-enemy">Charmander</h2>
@@ -77,9 +61,8 @@
           </div>
         </div>
       </div>
-      <div id="logs"></div>
+      <div class="logs" id="logs"></div>
     </div>
-    <div class="catch_screen"></div>
 
     <script src="index.js" type="module"></script>
   </body>
