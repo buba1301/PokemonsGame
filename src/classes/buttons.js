@@ -1,7 +1,8 @@
 import { getRandomId } from '../utils.js';
 
 class Buttons {
-  constructor({ name, maxDamage, minDamage, maxCount }) {
+  constructor({ id, name, maxDamage, minDamage, maxCount }) {
+    this.id = id;
     this.name = name;
     this.maxDamage = maxDamage;
     this.minDamage = minDamage;
@@ -18,7 +19,7 @@ class Buttons {
 
     if (this.maxCount === 0) {
       spanEl.innerHTML = `(${this.maxCount})`;
-      elButton.remove(); // TODO делать дисейбл ?? перекрывается с общим дисейблом при перходе хода
+      elButton.remove();
     } else {
       spanEl.innerHTML = `(${this.maxCount})`;
     }

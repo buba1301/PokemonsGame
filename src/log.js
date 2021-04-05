@@ -1,4 +1,4 @@
-import { getRandomNum } from './utils.js';
+import { getRandomId } from './utils.js';
 
 function getLog(firstPerson, secondPerson, damageHP) {
   const logs = [
@@ -14,7 +14,7 @@ function getLog(firstPerson, secondPerson, damageHP) {
     `${firstPerson} пытался что-то сказать, но вдруг, неожиданно ${secondPerson} со скуки, разбил бровь сопернику. -${damageHP}`,
   ];
 
-  return logs[getRandomNum(logs.length, 1) - 1];
+  return logs[getRandomId(logs.length, 1) - 1];
 }
 
 export default getLog;

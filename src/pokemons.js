@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-const pokemons = [
+/* const pokemons = [
   {
     name: 'Pikachu',
     type: 'electric',
@@ -192,9 +192,10 @@ const pokemons = [
       },
     ],
   },
-];
+]; */
 
-const getPokemons = () =>
-  pokemons.reduce((acc, pokemon, index) => ({ ...acc, [index]: { ...pokemon, id: index } }), {});
+const getPokemons = (pokemons) => {
+  return pokemons.reduce((acc, pokemon) => ({ ...acc, [pokemon.id]: { ...pokemon } }), {});
+};
 
 export default getPokemons;

@@ -110,6 +110,7 @@ class Pokemon extends Selectors {
 
     if (this.hp.current <= 0) {
       this.hp.current = 0;
+      this.renderHP();
       $buttons.forEach((button) => (button.disabled = true));
       return 'finish';
     }
