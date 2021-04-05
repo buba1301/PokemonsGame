@@ -38,10 +38,7 @@ class Routes {
   };
 
   getData = async (endPointConfig, query = null) => {
-    console.log('!!!!!!!!!!!', query);
-
     const url = this.getUrl(endPointConfig, query);
-    console.log('!!!!!!!!!!!', url);
     const res = await fetch(url);
     const data = res.json();
 

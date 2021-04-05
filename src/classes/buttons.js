@@ -9,7 +9,9 @@ class Buttons {
     this.maxCount = maxCount;
   }
 
-  kickPoints = () => getRandomId(this.minDamage, this.maxCount);
+  kickPoints = () => {
+    return getRandomId(this.minDamage, this.maxDamage)
+  };
 
   renderClickCounter = () => {
     const elButton = document.getElementById(this.name);
